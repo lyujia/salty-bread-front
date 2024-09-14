@@ -7,3 +7,9 @@ services:
       dockerfile: ./Dockerfile
     environment:
       NODE_ENV: production
+    networks:
+      - network
+networks:
+  network:
+    name: saltybread
+    external: true
