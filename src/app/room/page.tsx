@@ -4,13 +4,12 @@ import { Typography, Button, TextField, Dialog, DialogActions, DialogContent, Di
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import ChatRoom from '../message/page';
-import { PageProps } from '../../../.next/types/app/layout';
 
 interface Room {
   roomId: string;
   title: string;
 }
-interface RoomProps extends PageProps{
+interface RoomProps{
   websocket: MutableRefObject<WebSocket | null>
 }
 const GetRoom: React.FC<RoomProps>= ({websocket}) =>{

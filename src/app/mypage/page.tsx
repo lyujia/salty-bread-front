@@ -2,14 +2,14 @@
 import React, { useState, useEffect, RefObject } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle, Typography, Box, Switch, Snackbar } from '@mui/material';
-import { PageProps } from '../../../.next/types/app/layout';
+
 
 
 interface UserInfo {
   name: string;
   email: string;
 }
-interface MyPageProps extends PageProps{
+interface MyPageProps {
   notificationEnabled: boolean;
   openWebSocket: () => void;
   closeWebSocket: () => void;

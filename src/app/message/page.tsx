@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useRef, MutableRefObject } from 'react';
 import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle, Typography, Box, List, ListItem, ListItemText, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import { PageProps } from '../../../.next/types/app/layout';
 
 interface Message {
   senderId: string;
@@ -11,7 +10,7 @@ interface Message {
   message: string;
 }
 
-interface ChatRoomProps extends PageProps{
+interface ChatRoomProps {
   roomId: string;
   roomTitle: string;
   onExit: (roomId: string) => void;
