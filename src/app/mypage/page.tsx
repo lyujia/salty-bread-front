@@ -1,20 +1,20 @@
 "use client"; // 클라이언트 컴포넌트로 설정
-import React, { useState, useEffect,useRef } from 'react';
+import React, { useState, useEffect, RefObject } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle, Typography, Box, Switch, Snackbar } from '@mui/material';
+import { PageProps } from '../../../.next/types/app/layout';
+
 
 interface UserInfo {
   name: string;
   email: string;
 }
-interface MyPageProps {
-  websocket: React.MutableRefObject<WebSocket | null>
+interface MyPageProps extends PageProps{
   notificationEnabled: boolean;
-  notificationMessage: string;
   openWebSocket: () => void;
   closeWebSocket: () => void;
 }
-function MyPage({websocket, notificationEnabled, notificationMessage,openWebSocket, closeWebSocket}:MyPageProps) {
+function MyPage({notificationEnabled, openWebSocket, closeWebSocket}:MyPageProps) {
   const [user, setUser] = useState<UserInfo | null>(null);
   const [showNameModal, setShowNameModal] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);

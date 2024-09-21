@@ -1,28 +1,26 @@
 "use client"; // 클라이언트 컴포넌트로 설정
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,MutableRefObject } from 'react';
 import { Typography, Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, ListItemText, Box, IconButton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import ChatRoom from '../message/page';
-import { Filter } from '@mui/icons-material';
+import { PageProps } from '../../../.next/types/app/layout';
 
 interface Room {
   roomId: string;
   title: string;
 }
-interface RoomProps {
-  websocket: React.MutableRefObject<WebSocket | null>
-  notificationEnabled: boolean;
-  notificationMessage: string;
+interface RoomProps extends PageProps{
+  websocket: MutableRefObject<WebSocket | null>
 }
-function GetRoom({websocket, notificationEnabled, notificationMessage}:RoomProps) {
+const GetRoom: React.FC<RoomProps>= ({websocket}) =>{
   const [rooms, setRooms] = useState<Room[]>([]);
   const [showRoomModal, setShowRoomModal] = useState(false);
   const [newTitle, setNewTitle] = useState('');
   const [friendEmails, setFriendEmails] = useState<string[]>(['']); // Initialize with one email input field
   const [accessToken, setAccessToken] = useState<string>('');
-  const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null); // Store the selected room ID
-  const [selectedRoomTitle, setSelectedRoomTitle] = useState<string | null>(null);
+  const [selectedRoomId, setSelectedRoomId] = useState<string>(''); // Store the selected room ID
+  const [selectedRoomTitle, setSelectedRoomTitle] = useState<string>('');
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken') ?? '';
@@ -95,7 +93,7 @@ function GetRoom({websocket, notificationEnabled, notificationMessage}:RoomProps
   };
   const exitRoom = (roomId: string) => {
     setRooms(rooms.filter(room => room.roomId!==roomId));
-    setSelectedRoomId(null);
+    setSelectedRoomId('');
   };
 
   const handleEnterRoom = (roomId: string, title: string) => {
@@ -104,7 +102,7 @@ function GetRoom({websocket, notificationEnabled, notificationMessage}:RoomProps
   };
 
   const handleCloseChatRoom = () => {
-    setSelectedRoomId(null); // Close chat room modal
+    setSelectedRoomId(''); // Close chat room modal
   };
 
   // Disable the add room button if the room title is empty or any friend email is empty
@@ -196,8 +194,8 @@ function GetRoom({websocket, notificationEnabled, notificationMessage}:RoomProps
           },
         }}
       >
-        {selectedRoomId && selectedRoomTitle && (
-          <ChatRoom roomId={selectedRoomId} roomTitle={selectedRoomTitle} onExit={exitRoom} onClose={handleCloseChatRoom}  websocket={websocket} notificationEnabled={notificationEnabled} notificationMessage={notificationMessage}/>
+        {selectedRoomId&& selectedRoomTitle&& (
+          <ChatRoom roomId={selectedRoomId} roomTitle={selectedRoomTitle} onExit={exitRoom} onClose={handleCloseChatRoom}  websocket={websocket} />
         )}
       </Dialog>
     </Box>

@@ -1,7 +1,8 @@
 "use client"; // 클라이언트 컴포넌트로 설정
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, MutableRefObject } from 'react';
 import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle, Typography, Box, List, ListItem, ListItemText, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
+import { PageProps } from '../../../.next/types/app/layout';
 
 interface Message {
   senderId: string;
@@ -10,15 +11,12 @@ interface Message {
   message: string;
 }
 
-interface ChatRoomProps {
+interface ChatRoomProps extends PageProps{
   roomId: string;
   roomTitle: string;
   onExit: (roomId: string) => void;
   onClose: () => void;
-  websocket: React.MutableRefObject<WebSocket | null>
-  notificationEnabled: boolean;
-  notificationMessage: string;
-
+  websocket: MutableRefObject<WebSocket | null>;
 }
 
 interface UserInfo {
@@ -27,7 +25,7 @@ interface UserInfo {
   email: string;
 }
 
-function ChatRoom({ roomId, roomTitle, onExit, onClose, websocket, notificationEnabled, notificationMessage }: ChatRoomProps) {
+const ChatRoom: React.FC<ChatRoomProps> = ({ roomId, roomTitle, onExit, onClose, websocket}) =>{
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [users, setUsers] = useState<UserInfo[]>([]);
@@ -74,11 +72,11 @@ function ChatRoom({ roomId, roomTitle, onExit, onClose, websocket, notificationE
       }
     }
     if (websocket.current) {
-      websocket.current.onmessage = (event) => {
+      websocket.current.onmessage = () => {
         fetchMessages;
       };
     }
-  }}, [websocket]);
+  }}, [roomId, websocket]);
   
   useEffect(() => {
     

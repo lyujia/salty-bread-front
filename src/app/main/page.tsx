@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState,useRef, useEffect } from "react";
+import React, { useState,useRef, useEffect, RefObject } from "react";
 import { Box, Tab, Badge } from "@mui/material";
 import GroupRoundedIcon from '@mui/icons-material/GroupRounded';
 import EmailRoundedIcon from '@mui/icons-material/EmailRounded';
@@ -22,7 +22,7 @@ function Main() {
     }else{
       setNotificationsEnabled(false);
     }
-  }
+  },[]
 )
   function onTabListChanged(_: React.SyntheticEvent, newValue: number) {
     setTabValue(newValue);
@@ -91,10 +91,10 @@ function Main() {
           <GetFriend/>
         </TabPanel>
         <TabPanel value="2">
-          <GetRoom websocket={websocket} notificationEnabled={notificationsEnabled} notificationMessage={notificationMessage} />
+          <GetRoom websocket={websocket} />
         </TabPanel>
         <TabPanel value="3">
-          <MyPage websocket={websocket} notificationEnabled={notificationsEnabled} notificationMessage={notificationMessage} openWebSocket={openWebSocket} closeWebSocket={closeWebSocket}/>
+          <MyPage  notificationEnabled={notificationsEnabled} openWebSocket={openWebSocket} closeWebSocket={closeWebSocket}/>
         </TabPanel>
       </TabContext>
     </Box>
