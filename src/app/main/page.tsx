@@ -40,6 +40,7 @@ function Main() {
 
     websocket.current.onmessage = (event) => {
       const message = event.data;
+      console.log(message);
       setNotificationMessage(message);
 
       setTimeout(() => {
