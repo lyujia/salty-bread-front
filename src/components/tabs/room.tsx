@@ -1,5 +1,5 @@
 "use client"; // 클라이언트 컴포넌트로 설정
-import React, { useState, useEffect,MutableRefObject } from 'react';
+import React, { useState, useEffect,MutableRefObject, forwardRef, useImperativeHandle, useRef } from 'react';
 import { Typography, Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, ListItemText, Box, IconButton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -12,7 +12,7 @@ interface Room {
 interface RoomProps{
   websocket: MutableRefObject<WebSocket | null>
 }
-const GetRoom: React.FC<RoomProps>= ({websocket}) =>{
+const GetRoom =forwardRef<{updateMessage: (messageText:string, senderName: string)=>void}, RoomProps> (({websocket}, ref) =>{
   const [rooms, setRooms] = useState<Room[]>([]);
   const [showRoomModal, setShowRoomModal] = useState(false);
   const [newTitle, setNewTitle] = useState('');
@@ -20,7 +20,7 @@ const GetRoom: React.FC<RoomProps>= ({websocket}) =>{
   const [accessToken, setAccessToken] = useState<string>('');
   const [selectedRoomId, setSelectedRoomId] = useState<string>(''); // Store the selected room ID
   const [selectedRoomTitle, setSelectedRoomTitle] = useState<string>('');
-
+  const chatRoomRef = useRef<{updateMessage: (messageText:string, senderName: string)=>void}>(null);
   useEffect(() => {
     const token = localStorage.getItem('accessToken') ?? '';
     setAccessToken(token);
@@ -106,7 +106,15 @@ const GetRoom: React.FC<RoomProps>= ({websocket}) =>{
 
   // Disable the add room button if the room title is empty or any friend email is empty
   const isAddRoomDisabled = newTitle.trim() === '' || friendEmails.some(email => email.trim() === '');
-
+  useImperativeHandle(ref, () => (
+    {
+      updateMessage(messageText: string, senderName: string){
+        if(chatRoomRef.current){
+          chatRoomRef.current.updateMessage(messageText, senderName);
+        }
+      },
+    }
+  ))
   return (
     <Box sx={{ padding: 3 }}>
       <Typography variant="h5" gutterBottom>
@@ -194,11 +202,11 @@ const GetRoom: React.FC<RoomProps>= ({websocket}) =>{
         }}
       >
         {selectedRoomId&& selectedRoomTitle&& (
-          <ChatRoom roomId={selectedRoomId} roomTitle={selectedRoomTitle} onExit={exitRoom} onClose={handleCloseChatRoom}  websocket={websocket} />
+          <ChatRoom ref = {chatRoomRef} roomId={selectedRoomId} roomTitle={selectedRoomTitle} onExit={exitRoom} onClose={handleCloseChatRoom}  websocket={websocket} />
         )}
       </Dialog>
     </Box>
   );
 }
-
+)
 export default GetRoom;

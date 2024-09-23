@@ -1,5 +1,5 @@
 "use client"; // 클라이언트 컴포넌트로 설정
-import React, { useState, useEffect, useRef, MutableRefObject } from 'react';
+import React, { useState, useEffect, useRef, MutableRefObject, useImperativeHandle, forwardRef } from 'react';
 import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle, Typography, Box, List, ListItem, ListItemText, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 
@@ -24,7 +24,7 @@ interface UserInfo {
   email: string;
 }
 
-const ChatRoom: React.FC<ChatRoomProps> = ({ roomId, roomTitle, onExit, onClose, websocket}) =>{
+const ChatRoom = forwardRef<{updateMessage: (messageText: string, senderName: string) => void}, ChatRoomProps>(({ roomId, roomTitle, onExit, onClose, websocket}, ref)=>{
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [users, setUsers] = useState<UserInfo[]>([]);
@@ -310,7 +310,18 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ roomId, roomTitle, onExit, onClose,
       setSearchMessages([]);
     }
   };
-
+  useImperativeHandle(ref, () => ({
+    updateMessage(messageText: string, senderName: string){
+      const newMessage: Message = {
+        senderId: "Unknown",
+        senderName: senderName,
+        timestamp: new Date().toISOString(), // 현재 시간의 타임스탬프
+        message: messageText,
+      };
+      setMessages((prevMessages) => [...prevMessages,newMessage]);
+    }
+  }
+  ));
  
 
   return (
@@ -506,5 +517,6 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ roomId, roomTitle, onExit, onClose,
   );
   
 }
+)
 
 export default ChatRoom;

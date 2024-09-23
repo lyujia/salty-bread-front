@@ -16,6 +16,8 @@ function Main() {
   const websocket = useRef<WebSocket | null>(null); // useRef로 WebSocket 참조
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState<string>('');
+  const roomRef = useRef<{updateMessage:(messageText:string, senderName : string) => void}>(null);
+
   useEffect(() => {
     if(websocket.current){
       setNotificationsEnabled(true);
@@ -41,6 +43,12 @@ function Main() {
     websocket.current.onmessage = (event) => {
       const message = event.data;
       console.log(message);
+      
+       
+      if(roomRef.current){
+        const [senderName, messageText] = message.split(":");
+        roomRef.current.updateMessage(messageText,senderName);
+      }
       setNotificationMessage(message);
 
       setTimeout(() => {
@@ -92,7 +100,7 @@ function Main() {
           <GetFriend/>
         </TabPanel>
         <TabPanel value="2">
-          <GetRoom websocket={websocket} />
+          <GetRoom ref = {roomRef} websocket={websocket} />
         </TabPanel>
         <TabPanel value="3">
           <MyPage  notificationEnabled={notificationsEnabled} openWebSocket={openWebSocket} closeWebSocket={closeWebSocket}/>
