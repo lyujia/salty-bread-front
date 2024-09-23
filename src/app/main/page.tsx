@@ -6,10 +6,10 @@ import GroupRoundedIcon from '@mui/icons-material/GroupRounded';
 import EmailRoundedIcon from '@mui/icons-material/EmailRounded';
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
-import GetFriend from "../friend/page";
-import GetRoom from "../room/page";
-import MyPage from "../mypage/page";
+import GetFriend from "@/components/friend";
+import GetRoom from "@/components/room";
+import MyPage from "@/components/mypage";
+
 
 function Main() {
   const [tabValue, setTabValue] = useState(0);
