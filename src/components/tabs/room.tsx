@@ -3,7 +3,7 @@ import React, { useState, useEffect,MutableRefObject } from 'react';
 import { Typography, Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, ListItemText, Box, IconButton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import ChatRoom from '@/components/modals/chat-room';
+import ChatRoom from '../modals/chat-room';
 
 interface Room {
   roomId: string;
