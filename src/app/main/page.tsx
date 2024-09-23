@@ -31,7 +31,7 @@ function Main() {
     if (websocket.current) return; // 이미 연결되어 있으면 종료
 
     const token = localStorage.getItem('accessToken');
-    websocket.current = new WebSocket(`ws://localhost:8000/notifications?token=${token}`);
+    websocket.current = new WebSocket(`wss://api.saltybread.party/notifications?token=${token}`);
 
     websocket.current.onopen = () => {
       console.log("WebSocket connection opened");
