@@ -6,9 +6,9 @@ import GroupRoundedIcon from '@mui/icons-material/GroupRounded';
 import EmailRoundedIcon from '@mui/icons-material/EmailRounded';
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import GetFriend from "@/components/friend";
-import GetRoom from "@/components/room";
-import MyPage from "@/components/mypage";
+import GetFriend from "@/components/tabs/friend";
+import GetRoom from "@/components/tabs/room";
+import MyPage from "@/components/tabs/my-page";
 
 
 function Main() {
