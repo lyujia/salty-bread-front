@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Modal, TextField, Typography, Box, List, ListItem, ListItemText, ListItemSecondaryAction,IconButton } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
+import { useRouter } from 'next/navigation';
 
 interface Friend {
   userId: string;
@@ -16,7 +17,7 @@ function GetFriend() {
   const [newFriendEmail, setNewFriendEmail] = useState('');
   const [accessToken, setAccessToken] = useState<string>('');
   const [searchTerm, setSearchTerm] = useState(''); // 검색어 상태 추가
-
+  const router = useRouter();
   useEffect(() => {
     const token = localStorage.getItem('accessToken') ?? '';
     setAccessToken(token);
@@ -51,6 +52,9 @@ function GetFriend() {
       }else if(data.statusCode === 404){
         alert('존재하지 않는 이메일 입니다.');
         setNewFriendEmail('');
+      }else if(data.statusCode === 403){
+        localStorage.removeItem('accessToken');
+        router.push('/');
       }else{
         alert('잘못된 요청입니다.');
       }

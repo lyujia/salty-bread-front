@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef, MutableRefObject, useImperativeHandle, forwardRef } from 'react';
 import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle, Typography, Box, List, ListItem, ListItemText, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-
+import { useRouter } from 'next/navigation';
 interface Message {
   senderId: string;
   senderName: string;
@@ -43,6 +43,7 @@ const ChatRoom = forwardRef<{updateMessage: (messageText: string, senderName: st
   const [showInviteInput, setShowInviteInput] = useState(false);
   const messageEndRef = useRef<HTMLDivElement | null>(null);
   const [searchMessages, setSearchMessages] = useState<Message[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -63,6 +64,9 @@ const ChatRoom = forwardRef<{updateMessage: (messageText: string, senderName: st
           if (messagesContainerRef.current) {
             messagesContainerRef.current.scrollTop = 0;
           }
+        }else if(data.statusCode === 403){
+          localStorage.removeItem('accessToken');
+          router.push('/');
         } else {
           console.error('Error fetching messages:', data.message);
         }
@@ -97,7 +101,10 @@ const ChatRoom = forwardRef<{updateMessage: (messageText: string, senderName: st
           if (messagesContainerRef.current) {
             messagesContainerRef.current.scrollTop = 0;
           }
-        } else {
+        } else if(data.statusCode === 403){
+          localStorage.removeItem('accessToken');
+          router.push('/');
+        }else {
           console.error('Error fetching messages:', data.message);
         }
       } catch (error) {
@@ -126,7 +133,10 @@ const ChatRoom = forwardRef<{updateMessage: (messageText: string, senderName: st
           messagesContainerRef.current.scrollTop = 0;
           console.log(messagesContainerRef.current.scrollTop);
         }
-      } else {
+      } else if(data.statusCode === 403){
+        localStorage.removeItem('accessToken');
+        router.push('/');
+      }else {
         setNewMessage('');
         alert('메세지 전송에 실패했습니다.');
       }
@@ -147,6 +157,9 @@ const ChatRoom = forwardRef<{updateMessage: (messageText: string, senderName: st
       if (data.statusCode === 200) {
         setUsers(data.body);
         setShowRoomInfo(true);
+      }else if(data.statusCode === 403){
+        localStorage.removeItem('accessToken');
+        router.push('/');
       } else {
         alert('방 정보를 읽는 것에 실패했습니다.');
       }
@@ -188,6 +201,9 @@ const ChatRoom = forwardRef<{updateMessage: (messageText: string, senderName: st
             const newScrollHeight = messagesContainerRef.current.scrollHeight;
             messagesContainerRef.current.scrollTop =  previousScrollTop + newScrollHeight- previousScrollHeight;
           }
+        }else if(data.statusCode === 403){
+          localStorage.removeItem('accessToken');
+          router.push('/');
         } else {
           console.error('Error fetching older messages:', data.message);
         }
@@ -213,7 +229,10 @@ const ChatRoom = forwardRef<{updateMessage: (messageText: string, senderName: st
       if (data.statusCode === 200) {
         setMessages((prevMessages) => [...data.body, ...prevMessages]); // !! 새로운 메시지를 기존 메시지 앞에 추가
         onExit(`${roomId}`);
-      } else {
+      } else if(data.statusCode === 403){
+        localStorage.removeItem('accessToken');
+        router.push('/');
+      }else {
         console.error('Error fetching older messages:', data.message);
       }
     } catch (error) {
@@ -239,7 +258,10 @@ const ChatRoom = forwardRef<{updateMessage: (messageText: string, senderName: st
         setShowRoomInfo(false); // 모달을 닫아서 배경을 어둡게 유지하지 않음
         setCurrentRoomTitle(newRoomTitle);
         alert('방 제목이 변경되었습니다.');
-      } else {
+      } else if(data.statusCode === 403){
+        localStorage.removeItem('accessToken');
+        router.push('/');
+      }else {
         alert('방 제목 변경에 실패했습니다.');
       }
     } catch (error) {
@@ -263,7 +285,10 @@ const ChatRoom = forwardRef<{updateMessage: (messageText: string, senderName: st
         setInviteFriend('');
         setShowInviteInput(false);
         setShowRoomInfo(false); 
-      } else {
+      } else if(data.statusCode === 403){
+        localStorage.removeItem('accessToken');
+        router.push('/');
+      }else {
         alert('친구 초대에 실패했습니다.');
       }
     } catch (error) {
@@ -293,6 +318,9 @@ const ChatRoom = forwardRef<{updateMessage: (messageText: string, senderName: st
         setSearchMessages(data.body);
         console.log(data.body);
         console.log(searchMessages);
+      }else if(data.statusCode === 403){
+        localStorage.removeItem('accessToken');
+        router.push('/');
       } else {
         console.error('Error fetching messages:', data.message);
       }

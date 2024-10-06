@@ -39,6 +39,9 @@ function MyPage({notificationEnabled, openWebSocket, closeWebSocket}:MyPageProps
         const data = await response.json();
         if(data.statusCode === 200){
             setUser(data.body);
+        }else if(data.statusCode === 403){
+          localStorage.removeItem('accessToken');
+          router.push('/');
         }else{
             alert('정보를 읽어오는데 실패했습니다.')
         }
@@ -66,7 +69,10 @@ function MyPage({notificationEnabled, openWebSocket, closeWebSocket}:MyPageProps
         setUser((prev) => (prev ? { ...prev, name: newName } : null));
         setShowNameModal(false);
         setNewName('');
-      } else {
+      } else if(data.statusCode === 403){
+        localStorage.removeItem('accessToken');
+        router.push('/');
+      }else {
         alert('이름 변경에 실패했습니다.');
       }
     } catch (error) {
@@ -90,7 +96,10 @@ function MyPage({notificationEnabled, openWebSocket, closeWebSocket}:MyPageProps
         setNewPassword('');
         setOldPassword('');
         alert('비밀번호 변경에 성공했습니다.')
-      } else {
+      } else if(data.statusCode === 403){
+        localStorage.removeItem('accessToken');
+        router.push('/');
+      }else {
         alert('비밀번호 변경에 실패했습니다.');
       }
     } catch (error) {
@@ -116,7 +125,10 @@ function MyPage({notificationEnabled, openWebSocket, closeWebSocket}:MyPageProps
       if (data.statusCode === 200) {
         localStorage.removeItem('accessToken');
         router.push('/');
-      } else {
+      } else if(data.statusCode === 403){
+        localStorage.removeItem('accessToken');
+        router.push('/');
+      }else {
         alert('회원 탈퇴에 실패했습니다.');
       }
     } catch (error) {

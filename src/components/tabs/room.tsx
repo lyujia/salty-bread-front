@@ -4,7 +4,7 @@ import { Typography, Button, TextField, Dialog, DialogActions, DialogContent, Di
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import ChatRoom from '../modals/chat-room';
-
+import { useRouter } from 'next/navigation';
 interface Room {
   roomId: string;
   title: string;
@@ -21,6 +21,7 @@ const GetRoom =forwardRef<{updateMessage: (messageText:string, senderName: strin
   const [selectedRoomId, setSelectedRoomId] = useState<string>(''); // Store the selected room ID
   const [selectedRoomTitle, setSelectedRoomTitle] = useState<string>('');
   const chatRoomRef = useRef<{updateMessage: (messageText:string, senderName: string)=>void}>(null);
+  const router = useRouter();
   useEffect(() => {
     const token = localStorage.getItem('accessToken') ?? '';
     setAccessToken(token);
@@ -36,6 +37,9 @@ const GetRoom =forwardRef<{updateMessage: (messageText:string, senderName: strin
         const data = await response.json();
         if (data.statusCode === 200) {
           setRooms(data.body)
+        }else if(data.statusCode === 403){
+          localStorage.removeItem('accessToken');
+          router.push('/');
         } else {
           alert('방들을 가져오는데 실패했습니다.')
         }
@@ -68,6 +72,9 @@ const GetRoom =forwardRef<{updateMessage: (messageText:string, senderName: strin
         setShowRoomModal(false);
         setNewTitle('');
         setFriendEmails(['']);
+      }else if(data.statusCode === 403){
+        localStorage.removeItem('accessToken');
+        router.push('/');
       } else {
         setFriendEmails(['']);
         alert('존재하지 않는 이메일이 포함되어 있습니다.');
